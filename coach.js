@@ -10,7 +10,7 @@ export async function coach(raw,env=process.env,fetcher=fetch){
  const i=validateInput(raw);
  if(!isConfigured(env))fail('Configure API_KEY and MODEL in the server environment, then restart. See README for setup.');
  const base=env.API_BASE_URL||'https://api.openai.com/v1';
- const messages=[{role:'system',content:prompts.persona+'\n'+prompts[i.action]+(i.action==='retry'?'\nFeedback schema: '+prompts.feedback:'')},{role:'user',content:JSON.stringify(i)}];
+ const messages=[{role:'system',content:prompts.persona+'\n'+prompts[i.action]},{role:'user',content:JSON.stringify(i)}];
  const signal=AbortSignal.timeout(45000);
  for(let attempt=0;attempt<2;attempt++){
   let r;try{r=await fetcher(base.replace(/\/$/,'')+'/chat/completions',{method:'POST',signal,headers:{'Content-Type':'application/json',Authorization:`Bearer ${env.API_KEY||'local'}`},body:JSON.stringify({model:env.MODEL,messages,response_format:{type:'json_object'},temperature:0.4,max_tokens:1800})});}catch{fail('Model connection timed out or failed. Check provider settings and try again.');}
