@@ -1,0 +1,29 @@
+{
+  "label": "Recorded model run — not live inference",
+  "model": "dolphin3:8b",
+  "source": "Actual local browser session on November 5, 2026. Initial feedback used pre-9ad1346 prompt; retry used 9ad1346. Later prompt fixes are not retroactive.",
+  "presentation": "Campus Cup: a reusable cup return pilot\n\nOur capstone proposes return stations at the campus café to reduce disposable cup waste. We surveyed 24 students from our design class: 18 said they would try a reusable cup if return stations were convenient. We predict the program will reduce all campus cup waste by 80% in one semester.\n\nWe have not yet measured actual return behavior or surveyed other departments. Our proposed four-week pilot would track cups issued, returned, lost, and washed. A $2 deposit would encourage returns. We estimate setup costs of $1,200, excluding staff labor. Our team recommends testing at one café before expanding.",
+  "claim": {
+    "id": "c3",
+    "claim": "The pilot predicts significant reduction in campus cup waste",
+    "evidence": "We predict the program will reduce all campus cup waste by 80% in one semester."
+  },
+  "question": "How can a four-week pilot with $1,200 setup costs and no current data on broader student interest or behavior be used to predict an 80% reduction in campus cup waste?",
+  "answer": "Eighteen out of twenty-four students said they would try it, so we think an 80% reduction is realistic.",
+  "feedback": {
+    "quote": "Eighteen out of twenty-four students said they would try it",
+    "strength": "The presentation provides some evidence from a survey.",
+    "gap": "The sample size and scope are limited, only including one class and no other departments. The prediction of an 80% reduction is based on very small-scale data without broader validation or historical context.",
+    "nextStep": "Consider expanding the survey to more classes or departments for a larger sample size. Additionally, analyze previous waste reduction programs for comparable effectiveness benchmarks.",
+    "followUp": "What specific factors from the survey results lead you to believe that an 80% reduction is realistic?"
+  },
+  "revision": "The 80% figure is an untested goal, not a measured result. Our survey only shows interest among 24 classmates and cannot establish actual returns or campus-wide waste reduction. We should relabel that claim, measure cups issued, returned and lost in the four-week pilot, and include staff labour before judging feasibility.",
+  "revisedFeedback": {
+    "strength": "The answer now acknowledges limitations more clearly and proposes specific measurements for a more reliable prediction.",
+    "gap": "The initial answer made an unsubstantiated claim of an 80% reduction without considering broader student interest or behavior; this new version acknowledges these gaps more honestly.",
+    "nextStep": "Conduct a detailed literature review on similar programs to better understand potential outcomes and gather evidence for realistic waste reduction estimates.",
+    "followUp": "What specific metrics do you propose measuring during the pilot to accurately assess its effectiveness?",
+    "change": "The current answer is stronger: it admits to the lack of evidence for an 80% reduction and proposes more rigorous testing."
+  },
+  "limitations": "The retry follow-up redundantly asks for metrics already named. This limitation motivated a later prompt clarification; retain this actual output unchanged."
+}
