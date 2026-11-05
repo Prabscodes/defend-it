@@ -18,9 +18,9 @@ Identify a real-world problem; design and implement a functioning AI MVP; use at
 
 ## Release checklist
 
-- [ ] Automated correctness tests pass.
-- [ ] Browser setup-to-export flow verified.
-- [ ] Actual model runs saved, including limitations.
+- [x] Automated correctness tests pass (19 tests).
+- [ ] Browser setup-to-export flow verified (AI loop passed; export contents tested, browser download delivery unconfirmed).
+- [x] Actual model runs saved, including limitations.
 - [ ] Public app URL works anonymously with real inference.
 - [ ] GitHub URL is anonymous-readable and matches deployed code.
 - [ ] Video voice-over recorded by presenter and reviewed.

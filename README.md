@@ -42,7 +42,7 @@ npm test
 python3 scripts/evaluate.py --app http://127.0.0.1:18767
 ```
 
-Tests cover malformed inputs, exact quote validation, bounded response repair, provider errors, repeated questions and HTTP boundaries. The evaluation script uses fictional developer-created cases and requires real inference. These are not broad accuracy or learning-outcome measurements. See [evaluation plan](docs/EVALUATION_PLAN.md) and any saved results in `evaluation/`.
+Tests cover malformed inputs, exact quote validation, bounded response repair, provider errors, repeated questions and HTTP boundaries. The evaluation script uses fictional developer-created cases and requires real inference. These are not broad accuracy or learning-outcome measurements. See [evaluation plan](docs/EVALUATION_PLAN.md), [actual results and limitations](docs/EVALUATION_RESULTS.md), and saved responses in `evaluation/`.
 
 ## Prompt engineering
 
