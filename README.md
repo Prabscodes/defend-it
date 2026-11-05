@@ -4,6 +4,8 @@
 
 This is a working course MVP, not an official grader or a factual verification service. It uses real model inference; unavailable providers produce an error rather than canned feedback. The built-in Campus Cup example is fictional.
 
+Website: https://defend-it.onrender.com — deployed; hosted AI configuration and verification are still pending. See the validation record before treating it as submission-ready.
+
 ## What you can do
 
 1. Paste presentation notes (or import plain `.txt`) and optionally a grading rubric.

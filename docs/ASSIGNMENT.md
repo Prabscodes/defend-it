@@ -22,7 +22,7 @@ Identify a real-world problem; design and implement a functioning AI MVP; use at
 - [ ] Browser setup-to-export flow verified (AI loop passed; export contents tested, browser download delivery unconfirmed).
 - [x] Actual model runs saved, including limitations.
 - [ ] Public app URL works anonymously with real inference.
-- [ ] GitHub URL is anonymous-readable and matches deployed code.
+- [x] GitHub URL is anonymous-readable and matches initial deployed code (fdc0029).
 - [ ] Video voice-over recorded by presenter and reviewed.
 - [ ] Published video duration is under 120 seconds and viewer URL works.
 - [ ] Presenter practises real-time demo.
