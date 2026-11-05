@@ -62,3 +62,7 @@ Each comparison field 1–2000 characters; both quotes validated literally.
 ## Limits and errors
 
 400 invalid input/JSON; 403 cross-origin POST; 413 body above 100,000 bytes; 429 above 20 coaching requests per remote socket IP per minute; 503 configuration/provider/output errors. No proxy headers are trusted. A shared reverse proxy may share the limit across clients. Provider calls share a 45-second abort deadline, max_tokens=1800, temperature=0.4, response_format=json_object. One repair after malformed JSON/schema/quote failure, including a bounded validation diagnostic. No fallback inference. No application request-body logging or server session persistence. Browser localStorage stores the session; clearing it cannot remove provider retention or downloaded exports.
+
+## Optional reasoning control
+
+Set `REASONING_EFFORT` only when the selected provider/model supports the Chat Completions `reasoning_effort` parameter. A nonempty value is forwarded verbatim; when unset or empty the field is omitted, preserving provider defaults. For compatible local Ollama models, `REASONING_EFFORT=none` disables thinking so the output budget can be used for the requested JSON. Other providers and models accept different values and may reject unsupported ones. See [Ollama OpenAI compatibility](https://docs.ollama.com/api/openai-compatibility). This setting is server-side and does not change the coaching response schemas.
