@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: defend-it
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/status
+    envVars:
+      - key: API_BASE_URL
+        value: https://api.openai.com/v1
+      - key: API_KEY
+        sync: false
+      - key: MODEL
+        sync: false

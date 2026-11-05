@@ -1,0 +1,4 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {createApp} from '../server.js';
+test('HTTP serves interface, status and prompts without secrets and blocks invalid requests',async()=>{const server=createApp({});await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1:${server.address().port}`;try{const status=await(await fetch(url+'/api/status')).json();assert.equal(status.configured,false);assert.ok((await(await fetch(url)).text()).includes('Defend It'));assert.ok((await(await fetch(url+'/api/prompts')).json()).persona);assert.equal((await fetch(url+'/api/coach',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})).status,400);assert.equal((await fetch(url+'/api/coach',{method:'POST',body:'x'.repeat(100001)})).status,413);}finally{await new Promise(r=>server.close(r));}});
