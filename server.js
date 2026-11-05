@@ -2,7 +2,7 @@ import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {coach,prompts,validateInput,isConfigured} from './coach.js';
-export function createApp(env=process.env){
+export function createApp(env=process.env,fetcher=fetch){
  const buckets=new Map();
  return http.createServer(async(req,res)=>{
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
@@ -14,11 +14,11 @@ export function createApp(env=process.env){
    const origin=req.headers.origin;if(origin&&origin!==`http://${req.headers.host}`&&origin!==`https://${req.headers.host}`)return json(403,{error:'Cross-origin requests are not allowed.'});
    const now=Date.now(),ip=req.socket.remoteAddress;for(const [key,value]of buckets)if(now-value.start>60000)buckets.delete(key);
    const bucket=buckets.get(ip)||{start:now,count:0};buckets.set(ip,bucket);if(++bucket.count>20)return json(429,{error:'Please wait a minute before making more coaching requests.'});
-   let body='';try{for await(const chunk of req){body+=chunk.toString();if(Buffer.byteLength(body)>100000)return json(413,{error:'Request is too large (100 KB maximum).'});}}catch{return json(400,{error:'Unable to read request.'});}
-   let input;try{input=validateInput(JSON.parse(body));}catch(e){return json(400,{error:e instanceof SyntaxError?'Send valid JSON.':e.message});}
-   try{return json(200,{result:await coach(input,env)});}catch(e){return json(503,{error:e.message});}
+   const chunks=[];let size=0;try{for await(const chunk of req){size+=chunk.length;if(size>100000)return json(413,{error:'Request is too large (100 KB maximum).'});chunks.push(chunk);}}catch{return json(400,{error:'Unable to read request.'});}
+   let input;try{input=validateInput(JSON.parse(Buffer.concat(chunks,size).toString('utf8')));}catch(e){return json(400,{error:e instanceof SyntaxError?'Send valid JSON.':e.message});}
+   try{return json(200,{result:await coach(input,env,fetcher)});}catch(e){return json(503,{error:e.message});}
   }
-  const files={'/':'index.html','/app.js':'app.js','/styles.css':'styles.css'};
+  const files={'/':'index.html','/app.js':'app.js','/export.js':'export.js','/styles.css':'styles.css'};
   if(req.method==='GET'&&files[path]){try{const data=await readFile(new URL('./public/'+files[path],import.meta.url));res.writeHead(200,{'Content-Type':path.endsWith('.js')?'text/javascript':path.endsWith('.css')?'text/css':'text/html'});return res.end(data);}catch{}}
   json(404,{error:'Not found.'});
  });
