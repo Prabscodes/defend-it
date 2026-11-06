@@ -1,0 +1,56 @@
+[
+  {
+    "start": 0,
+    "end": 12,
+    "scene": "setup",
+    "text": "Your slides are finished. Then someone asks, what evidence supports that claim? Defend It helps you practise those questions before your presentation."
+  },
+  {
+    "start": 12,
+    "end": 22,
+    "scene": "claim",
+    "text": "I load the Campus Cup sample, then select its boldest claim: an eighty percent reduction in campus cup waste. That's a prediction, not evidence."
+  },
+  {
+    "start": 22,
+    "end": 35,
+    "scene": "question",
+    "text": "The coach asks how a short pilot, limited budget, and no wider behavior data support that prediction. The question connects directly to the presentation."
+  },
+  {
+    "start": 35,
+    "end": 44,
+    "scene": "answer",
+    "text": "My first answer leans on eighteen interested classmates. It sounds confident, but interest alone doesn't show that people will return cups."
+  },
+  {
+    "start": 44,
+    "end": 57,
+    "scene": "feedback",
+    "text": "The feedback recognizes the survey, then flags its narrow sample and missing validation. It suggests expanding the sample and looking for comparable programs."
+  },
+  {
+    "start": 57,
+    "end": 71,
+    "scene": "revision",
+    "text": "I revise the same answer. Eighty percent becomes an untested goal. I acknowledge the limited sample, propose measuring actual returns, and include staff labor."
+  },
+  {
+    "start": 71,
+    "end": 83,
+    "scene": "comparison",
+    "text": "The recorded comparison calls the reasoning stronger. But the follow-up asks for metrics I already named. That's a real limitation, retained here rather than hidden."
+  },
+  {
+    "start": 83,
+    "end": 98,
+    "scene": "patterns",
+    "text": "Three prompt patterns support the workflow: a rigorous, kind coaching persona; few-shot examples demonstrating grounded feedback; and iterative refinement comparing two attempts on the same question."
+  },
+  {
+    "start": 98,
+    "end": 110,
+    "scene": "close",
+    "text": "Download the prep sheet to revisit your question, answers, and feedback. The coach can still miss things, so check its advice, then rehearse aloud."
+  }
+]
