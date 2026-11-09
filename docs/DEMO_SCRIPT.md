@@ -24,6 +24,6 @@ After all nine sections are ready, click **Build final video**. This combines se
 
 ## Live classroom demonstration
 
-Open the public site before presenting to handle a possible host cold start. Use the sample as input, generate claims and a question live, answer, discuss the actual response, and retry. Show actual prompt templates and explain why each pattern exists. Keep a labelled recording as a contingency, explicitly disclose if live inference is unavailable. End with limitations: generated advice can be mistaken, quote matching does not prove useful interpretation, and the model cannot verify research that was not provided.
+Open the public site before presenting to handle a possible host cold start. Use the sample as input, generate claims and a question live, answer, discuss the actual response, and retry. Show the actual prompt templates from `prompts.js` in the presentation and explain why each pattern exists. Keep a labelled recording as a contingency, explicitly disclose if live inference is unavailable. End with limitations: generated advice can be mistaken, quote matching does not prove useful interpretation, and the model cannot verify research that was not provided.
 
 Future applications: oral exam practice, proposal reviews and mock project interviews; voice interaction and document import are future work unless implemented and verified.

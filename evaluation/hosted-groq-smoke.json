@@ -1,0 +1,55 @@
+{
+  "claims": {
+    "claims": [
+      {
+        "id": "c1",
+        "claim": "Campus Cup proposes reusable cups",
+        "evidence": "Campus Cup proposes reusable cups"
+      },
+      {
+        "id": "c2",
+        "claim": "Predict an 80% reduction in disposable cup waste",
+        "evidence": "We predict an 80% reduction in disposable cup waste"
+      },
+      {
+        "id": "c3",
+        "claim": "Survey of 24 classmates found 18 would try the service",
+        "evidence": "We surveyed 24 classmates; 18 said they would try the service"
+      },
+      {
+        "id": "c4",
+        "claim": "Actual cup returns have not been measured yet",
+        "evidence": "We have not measured actual cup returns"
+      },
+      {
+        "id": "c5",
+        "claim": "A four\u2011week pilot will track cups issued, returned, and staff time",
+        "evidence": "A four-week pilot will track cups issued and returned and staff time"
+      }
+    ]
+  },
+  "question": {
+    "claimId": "c2",
+    "question": "How does the intention of 18 out of 24 surveyed classmates to try the service support the prediction of an 80% reduction in disposable cup waste?",
+    "rationale": "This question probes the logical link between expressed willingness and the quantitative waste\u2011reduction forecast, revealing whether the claim rests on sufficient evidence or requires additional data."
+  },
+  "feedback": {
+    "strength": "The answer references the survey result linking classmates' willingness to the predicted outcome.",
+    "quote": "Eighteen classmates said they would try it",
+    "gap": "It assumes that the expressed willingness of 18 out of 24 classmates directly translates into an 80% waste reduction without any quantitative justification, baseline waste figures, or consideration of actual behavior versus intention.",
+    "nextStep": "Outline a logical chain: estimate current disposable cup usage, estimate the proportion of total users who would adopt reusable cups based on the survey, and calculate the expected reduction; acknowledge uncertainties and propose how to validate these assumptions in the pilot.",
+    "followUp": "What additional data or calculations would you need to turn the 75% willingness rate into a credible estimate of an 80% reduction in disposable cup waste?"
+  },
+  "retry": {
+    "strength": "The answer correctly identifies that the current intention data do not constitute evidence for the 80% reduction and proposes a future pilot to collect concrete measurements.",
+    "quote": "Interest from 18 of 24 classmates does not establish actual cup return rates. We will measure cups issued and returned, disposable cup usage, and staff time during a four-week pilot before making a stronger claim.",
+    "gap": "The response still does not explain how, if at all, the expressed willingness of 18 classmates could be used to support the 80% reduction claim, leaving the logical connection unaddressed.",
+    "nextStep": "Add a brief discussion of what additional assumptions or calculations would be needed to translate the 75% expressed interest into an estimated waste\u2011reduction figure, even as a provisional estimate.",
+    "followUp": "What assumptions about adoption rates, cup reuse frequency, and baseline disposable cup usage would you need to make to turn the 18\u2011out\u2011of\u201124 intention data into a quantitative 80% reduction estimate?",
+    "comparison": {
+      "previousQuote": "Eighteen classmates said they would try it, so I think the program will reduce cup waste by 80%.",
+      "currentQuote": "Interest from 18 of 24 classmates does not establish actual cup return rates.",
+      "change": "Improvement: the revision moves from an unsupported inference to acknowledging the limitation and proposing future measurement, but it still does not bridge the logical gap between intention and the 80% prediction."
+    }
+  }
+}

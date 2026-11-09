@@ -4,7 +4,7 @@
 
 This is a working course MVP, not an official grader or a factual verification service. It uses real model inference; unavailable providers produce an error rather than canned feedback. The built-in Campus Cup example is fictional.
 
-Website: https://defend-it.onrender.com — deployed; hosted AI configuration and verification are still pending. See the validation record before treating it as submission-ready.
+Website: https://defend-it.onrender.com — deployed with Groq `openai/gpt-oss-120b`; a real hosted claims → question → feedback → retry check passed on November 9, 2026. Provider quotas still apply.
 
 Demo video: https://defend-it.onrender.com/demo/ — presenter-narrated, 1:50 edited replay of preserved AI outputs. The recording is separate from the required live classroom demonstration.
 
@@ -54,7 +54,7 @@ Tests cover malformed inputs, exact quote validation, bounded response repair, p
 - **Few-shot:** examples demonstrate extracting a claim, probing unsupported generalization and providing quote-backed actionable feedback.
 - **Iterative refinement:** a revised answer is evaluated against the same question with quotations from both attempts. The coach is instructed not to reward revisions automatically.
 
-The **How the coach thinks** panel displays actual runtime templates from `prompts.js`. Deterministic validators check response shape and quotation membership. They cannot prove that the interpretation is correct. See [API contract](docs/API.md).
+Actual runtime templates are documented in `prompts.js` and available at `/api/prompts` for technical review; the public practice interface focuses on the student workflow. Deterministic validators check response shape and quotation membership. They cannot prove that the interpretation is correct. See [API contract](docs/API.md).
 
 ## Deploy
 

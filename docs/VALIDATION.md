@@ -22,3 +22,8 @@ Do not interpret prepared materials as a completed submission or guaranteed grad
 - Combined nine selected clips, including the newly recorded clip, into a saved 110-second WebM. Paused and resumed during assembly. Decoded its audio (109.98 seconds) and confirmed the expected distinct test frequencies in all nine section windows, in order.
 - Started section 5 at 00:44, stopped after six seconds, and confirmed the partial clip did not replace the previous complete selection.
 - Actual microphone quality and permissions still require the user's device and recording action. Stored clips do not sync between devices.
+
+
+## Hosted AI and public interface — November 9, 2026
+
+Render now has API_KEY, API_BASE_URL for Groq, and MODEL=openai/gpt-oss-120b. The secret was not exposed. Anonymous API calls with fictional material passed claims, question, feedback, and retry validation; saved outputs are in `evaluation/hosted-groq-smoke.json`. This is a connectivity and workflow smoke check, not a model-quality benchmark. The public UI no longer exposes the prompt-engineering explainer; course explanations remain in the presentation and source documentation.

@@ -21,10 +21,10 @@ Identify a real-world problem; design and implement a functioning AI MVP; use at
 - [x] Automated correctness tests pass (23 tests).
 - [ ] Browser setup-to-export flow verified (AI loop passed; export contents tested, browser download delivery unconfirmed).
 - [x] Actual model runs saved, including limitations.
-- [ ] Public app URL works anonymously with real inference.
+- [x] Public app URL works anonymously with real inference (Groq, November 9, 2026; all four coaching actions passed).
 - [x] GitHub URL is anonymous-readable and contains the complete application and documentation.
 - [x] Presenter voice-over recorded; final MP4 media streams, duration and sampled frames checked. Spoken content has not been independently transcribed.
-- [ ] Published video duration is under 120 seconds and viewer URL works.
+- [x] Published video is 110.039 seconds; public viewer and playback metadata verified.
 - [ ] Presenter practises real-time demo.
 - [ ] Submission form values verified and submitted with receipt.
 
