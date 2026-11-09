@@ -1,4 +1,4 @@
-import {Timeline} from './timeline.mjs';
+import {Timeline,recordingRange,assemblyPlan} from './timeline.mjs';
 const $=id=>document.getElementById(id),canvas=$('demo'),ctx=canvas.getContext('2d'),clock=new Timeline(110);
 let cues,evidence,state='idle',recorder,mic,output,audioContext,analyser,countTimer,db,recordedSeconds=0,diagnostic=false,frames=0,attempt=0;
 const fmt=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
@@ -43,16 +43,129 @@ function draw(t){
  box(815,225,411,370,'#e7ece0');ctx.font='32px Georgia';ctx.fillStyle='#223b36';ctx.fillText('Progress is in',845,285);ctx.fillText('the revision.',845,325);wrap('A practice partner, not a grading authority.',845,381,345,26,'#223b36',38);button('Download prep sheet ↓',845,510,351);text('Reconstructed export step',845,583,18,'#58665d');cursor(local,[[0,1010,325],[4,1015,534,1],[8,1015,534]]);break;
  }
 }
-function render(){const t=clock.time(performance.now()),i=cues.findIndex(c=>t>=c.start&&t<c.end),c=cues[i<0?cues.length-1:i];draw(t);$('clock').textContent=`${fmt(t)} / 1:50`;$('cue').textContent=c.text;$('next').textContent=(i>=0?cues[i+1]?.text:null)||'Finish your sentence. The recording will save automatically.';$('cue-label').textContent=state==='paused'?'PAUSED — RESUME WHEN READY':state==='idle'?(t>=110?'FINISHED — REVIEW YOUR TAKE':'READY — START A NEW TAKE'):'READ NOW';$('cue-time').textContent=t>=110?'Finished':`${Math.ceil(c.end-t)} seconds for this line · cue ${Math.max(0,i)+1} of ${cues.length}`;$('cue-progress').value=Math.max(0,Math.min(1,(t-c.start)/(c.end-c.start)));if(analyser){const a=new Uint8Array(analyser.fftSize);analyser.getByteTimeDomainData(a);$('level').value=Math.min(1,Math.sqrt(a.reduce((s,v)=>s+((v-128)/128)**2,0)/a.length)*5)}if(state==='playing'&&t>=(diagnostic?3:110))finish();frames++;requestAnimationFrame(render)}
+const selectedTakes=new Map();
+let section=0,range={start:0,end:12},assembling=false,sources=[];
+const titles=['Introduction','Sample claim','The question','First answer','Feedback','Try again','Comparison','Prompt techniques','Wrap-up'];
+function position(){clock.reset();clock.elapsed=recordingRange(cues,section).start;}
+function render(){
+ const t=clock.time(performance.now());
+ const display=section!==null&&!assembling?Math.min(t,cues[section].end-.001):t;
+ const i=cues.findIndex(c=>display>=c.start&&display<c.end),c=cues[i<0?cues.length-1:i];
+ draw(display);$('clock').textContent=`${fmt(t)} / 1:50`;$('cue').textContent=c.text;
+ $('next').textContent=section!==null&&!assembling?'This section stops automatically. You can listen back or redo just this cue.':(i>=0?cues[i+1]?.text:null)||'Finish your sentence. The recording will save automatically.';
+ $('cue-label').textContent=assembling?'BUILDING FINAL VIDEO — NO NEED TO SPEAK':state==='paused'?'PAUSED — RESUME WHEN READY':state==='idle'?'READY — CHOOSE A SECTION OR RECORD':'READ NOW';
+ $('cue-time').textContent=`${Math.max(0,Math.ceil(c.end-t))} seconds for this line · cue ${Math.max(0,i)+1} of ${cues.length}`;
+ $('cue-progress').value=Math.max(0,Math.min(1,(t-c.start)/(c.end-c.start)));
+ if(analyser){const a=new Uint8Array(analyser.fftSize);analyser.getByteTimeDomainData(a);$('level').value=Math.min(1,Math.sqrt(a.reduce((s,v)=>s+((v-128)/128)**2,0)/a.length)*5)}
+ if(state==='playing'&&t>=range.end)finish();requestAnimationFrame(render);
+}
 function status(s){$('status').textContent=s}
-function controls(){const active=['playing','paused','countdown','saving'].includes(state);$('record').disabled=active||!cues;$('rehearse').disabled=active||!cues;$('diagnostic').disabled=active||!cues;$('pause').disabled=!['playing','paused'].includes(state);$('pause').textContent=state==='paused'?'Resume':'Pause';$('stop').disabled=!['playing','paused','countdown'].includes(state);$('reset').disabled=active}
-function cleanup(){mic?.getTracks().forEach(t=>t.stop());output?.getTracks().forEach(t=>t.stop());mic=null;output=null;audioContext?.close().catch(()=>{});audioContext=null;analyser=null;$('level').value=0}
-function pause(){if(state!=='playing')return;clock.pause(performance.now());if(recorder?.state==='recording')recorder.pause();state='paused';status('Paused. Your recording and demo clock are both paused.');controls()}
-function resume(){if(state!=='paused')return;if(recorder?.state==='paused')recorder.resume();clock.resume(performance.now());state='playing';status(recorder?'Recording your new voice and the demo. Read the bright cue.':'Rehearsing — microphone is off.');controls()}
-function finish(){attempt++;clearTimeout(countTimer);$('countdown').textContent='';recordedSeconds=clock.time(performance.now());clock.pause(performance.now());if(recorder&&recorder.state!=='inactive'){state='saving';recorder.stop();status('Saving your take…')}else{cleanup();recorder=null;state='idle';status('Session finished. Ready to record or rehearse again.')}controls()}
-async function save(blob,label,duration){const take={id:crypto.randomUUID(),date:Date.now(),blob,label,duration};let stored=false;if(db)try{await transaction('readwrite',s=>s.put(take));stored=true}catch{}addTake(take,!stored);return stored}
-function addTake(take,temporary=false){const el=document.createElement('div');el.className='take';const name=document.createElement('strong');name.textContent=`${take.label} · ${Math.round(take.duration)}s · ${new Date(take.date).toLocaleTimeString()}`;const v=document.createElement('video');v.controls=true;const url=URL.createObjectURL(take.blob);v.src=url;const link=document.createElement('a');link.href=url;link.download=`defend-it-${take.label.includes('diagnostic')?'silent-diagnostic':'voice-demo'}-${take.date}.webm`;link.textContent=take.label.includes('diagnostic')?'Download silent diagnostic':'Download video + audio';const note=document.createElement('small');note.textContent=temporary?'Not persisted: download now before leaving.':'Saved in this browser. Download for safekeeping.';el.append(name,v,link,note);$('takes').prepend(el)}
+function controls(){
+ const active=state!=='idle';
+ for(const id of ['record','rehearse','diagnostic','section','reset'])$(id).disabled=active||!cues;
+ $('pause').disabled=!['playing','paused'].includes(state);$('pause').textContent=state==='paused'?'Resume':'Pause';
+ $('stop').disabled=!['playing','paused','countdown'].includes(state);
+ $('record').textContent=section===null?'Record my voice + full demo':'Record my voice for this section';
+ $('assemble').disabled=active||selectedTakes.size!==cues?.length;
+ document.querySelectorAll('.use-take').forEach(b=>b.disabled=active);
+ updateSections();
+}
+function updateSections(){
+ if(!cues)return;
+ const select=$('section');
+ if(!select.options.length){for(let i=0;i<cues.length;i++)select.add(new Option('',String(i)));select.add(new Option('Whole demo — one continuous take','all'));select.value=String(section);}
+ for(let i=0;i<cues.length;i++)select.options[i].textContent=`${selectedTakes.has(i)?'✓ ':''}${i+1}. ${titles[i]} (${cues[i].end-cues[i].start}s)`;
+ $('section-summary').textContent=`${selectedTakes.size} of ${cues.length} sections ready. ${selectedTakes.size===cues.length?'You can build your final video now.':'Completed takes are selected automatically. Earlier takes remain below.'}`;
+ document.querySelectorAll('.use-take').forEach(b=>{b.textContent=selectedTakes.get(Number(b.dataset.section))?.id===b.dataset.take?'Selected for final video':'Use this take';});
+}
+function cleanup(){
+ for(const source of sources){try{source.stop()}catch{}}sources=[];
+ mic?.getTracks().forEach(t=>t.stop());output?.getTracks().forEach(t=>t.stop());mic=null;output=null;
+ audioContext?.close().catch(()=>{});audioContext=null;analyser=null;$('level').value=0;
+}
+function pause(){if(state!=='playing')return;clock.pause(performance.now());if(assembling)audioContext?.suspend();if(recorder?.state==='recording')recorder.pause();state='paused';status('Paused. Your recording and demo clock are both paused.');controls()}
+async function resume(){if(state!=='paused')return;if(assembling)await audioContext.resume();if(recorder?.state==='paused')recorder.resume();clock.resume(performance.now());state='playing';status(assembling?'Building final video — microphone off.':recorder?'Recording. Read the bright cue.':'Rehearsing — microphone is off.');controls()}
+function finish(){
+ attempt++;clearTimeout(countTimer);$('countdown').textContent='';recordedSeconds=Math.min(range.end,clock.time(performance.now()))-range.start;clock.pause(performance.now());
+ if(recorder&&recorder.state!=='inactive'){state='saving';recorder.stop();status('Saving your take…')}
+ else{cleanup();recorder=null;state='idle';assembling=false;status('Session finished. Ready to record or rehearse again.')}controls();
+}
+async function save(blob,label,duration,meta={}){
+ const take={...meta,id:crypto.randomUUID(),date:Date.now(),blob,label,duration};let stored=false;
+ if(db)try{await transaction('readwrite',s=>s.put(take));stored=true}catch{}
+ if(take.complete&&Number.isInteger(take.section))selectedTakes.set(take.section,take);
+ addTake(take,!stored);return stored;
+}
+function addTake(take,temporary=false){
+ const el=document.createElement('div');el.className='take';const name=document.createElement('strong');name.textContent=`${take.label} · ${Math.round(take.duration)}s · ${new Date(take.date).toLocaleTimeString()}`;
+ const v=document.createElement(take.audioOnly?'audio':'video');v.controls=true;const url=URL.createObjectURL(take.blob);v.src=url;
+ const link=document.createElement('a');link.href=url;link.download=`defend-it-${Number.isInteger(take.section)?'section-'+(take.section+1):take.label.includes('diagnostic')?'silent-diagnostic':'voice-demo'}-${take.date}.webm`;link.textContent=take.audioOnly?'Download voice clip':'Download video + audio';
+ const note=document.createElement('small');note.textContent=(temporary?'Not persisted: download now before leaving.':'Saved in this browser. Download for safekeeping.')+(Number.isInteger(take.section)&&!take.complete?' Incomplete take — record the full section to include it in the final video.':'');
+ el.append(name,v,link);
+ if(take.complete&&Number.isInteger(take.section)){const use=document.createElement('button');use.className='use-take';use.dataset.take=take.id;use.dataset.section=take.section;use.onclick=async()=>{
+  selectedTakes.set(take.section,take);updateSections();
+  if(db)try{const all=await transaction('readonly',s=>s.getAll());for(const old of all.filter(t=>t.section===take.section)){old.selected=old.id===take.id;await transaction('readwrite',s=>s.put(old));}}catch{status('Take selected for this visit. Storage was unavailable.');}
+ };el.append(use);}
+ el.append(note);$('takes').prepend(el);updateSections();
+}
 function transaction(mode,fn){return new Promise((resolve,reject)=>{const tx=db.transaction('takes',mode);const req=fn(tx.objectStore('takes'));tx.oncomplete=()=>resolve(req.result);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)})}
-async function start(withMic=false,silent=false){if(state!=='idle')return;const token=++attempt;diagnostic=silent;clock.reset();if(!withMic&&!silent){clock.start(performance.now());state='playing';status('Rehearsing — microphone is off. The cursor and clicks are automatic.');controls();return}state='countdown';controls();try{if(!window.MediaRecorder||!canvas.captureStream)throw new Error('This browser does not support canvas video recording. Use desktop Chrome or Edge.');if(withMic){const granted=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});if(token!==attempt){granted.getTracks().forEach(t=>t.stop());return}mic=granted;audioContext=new AudioContext();await audioContext.resume();if(token!==attempt){cleanup();return}analyser=audioContext.createAnalyser();audioContext.createMediaStreamSource(mic).connect(analyser)}output=canvas.captureStream(30);for(const track of mic?.getAudioTracks()||[])output.addTrack(track);const mime=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));if(!mime)throw new Error('WebM recording is unavailable in this browser.');recorder=new MediaRecorder(output,{mimeType:mime,videoBitsPerSecond:3500000});const chunks=[];recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onerror=e=>{status('Recording error. Saving captured media if available.');finish()};recorder.onstop=async()=>{const blob=new Blob(chunks,{type:mime});cleanup();recorder=null;try{if(blob.size){const stored=await save(blob,silent?'Silent diagnostic':'New voice take',recordedSeconds);status(stored?'Take saved. Listen below, then download it.':'Take ready. Download now: persistent storage was unavailable.')}else status('No media was captured. Try again.')}catch(e){status('Saving failed: '+e.message)}state='idle';controls()};let n=3;function tick(){if(state!=='countdown')return;$('countdown').textContent=n>0?String(n):'';if(n--<=0){draw(0);recorder.start(1000);clock.start(performance.now());state='playing';status(silent?'Silent diagnostic — no microphone.':'Recording. Read the bright cue; the demo runs automatically.');controls();}else countTimer=setTimeout(tick,1000)}status('Get ready. Recording starts after the countdown.');tick()}catch(e){if(token!==attempt)return;cleanup();recorder=null;state='idle';$('countdown').textContent='';status('Could not start: '+e.message);controls()}}
-$('rehearse').onclick=()=>start();$('record').onclick=()=>start(true);$('diagnostic').onclick=()=>start(false,true);$('pause').onclick=()=>state==='paused'?resume():pause();$('stop').onclick=finish;$('reset').onclick=()=>{clock.reset();status('Back to the start. Choose Rehearse or Record.');controls()};document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='playing')pause();else if(state==='countdown')finish()}});document.addEventListener('keydown',e=>{if(e.code==='Space'&&!['BUTTON','INPUT','TEXTAREA','VIDEO'].includes(document.activeElement.tagName)&&['playing','paused'].includes(state)){e.preventDefault();state==='playing'?pause():resume()}if(e.code==='Escape'&&['playing','paused','countdown'].includes(state))finish()});window.addEventListener('beforeunload',e=>{if(['playing','paused','countdown','saving'].includes(state)){e.preventDefault();e.returnValue=''}});
-try{[cues,evidence]=await Promise.all(['cues.json','evidence.json'].map(async p=>{const r=await fetch(p);if(!r.ok)throw new Error(p+' unavailable');return r.json()}));if(!evidence.question||!evidence.revisedFeedback?.change)throw new Error('Expected preserved Defend It session');try{const request=indexedDB.open('defend-it-guided-recorder',1);request.onupgradeneeded=()=>request.result.createObjectStore('takes',{keyPath:'id'});request.onsuccess=async()=>{db=request.result;try{(await transaction('readonly',s=>s.getAll())).forEach(t=>addTake(t))}catch{}};request.onerror=()=>status('Local storage unavailable. You can record, but must download the take.');}catch{db=null}status('Ready. Rehearse first, then record your voice. No microphone access until you click Record.');controls();render()}catch(e){status('Could not load the studio: '+e.message);controls()}
+function createRecorder(audioOnly,meta){
+ const mime=(audioOnly?['audio/webm;codecs=opus','audio/webm']:['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']).find(m=>MediaRecorder.isTypeSupported(m));
+ if(!mime)throw new Error('WebM recording is unavailable. Use desktop Chrome or Edge.');
+ recorder=new MediaRecorder(output,{mimeType:mime,...(!audioOnly?{videoBitsPerSecond:3500000}:{})});const chunks=[];
+ recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+ recorder.onerror=()=>{status('Recording error. Saving captured media if available.');finish()};
+ recorder.onstop=async()=>{
+  const blob=new Blob(chunks,{type:mime});cleanup();recorder=null;
+  const complete=recordedSeconds>=range.end-range.start-.25;
+  try{
+   if(blob.size){
+    if(Number.isInteger(meta.section)&&complete&&db)try{const all=await transaction('readonly',s=>s.getAll());for(const old of all.filter(t=>t.section===meta.section&&t.selected)){old.selected=false;await transaction('readwrite',s=>s.put(old));}}catch{}
+    const stored=await save(blob,meta.label+(complete?'':' (stopped early)'),recordedSeconds,{...meta,audioOnly,complete,selected:complete});
+    status(stored?(Number.isInteger(meta.section)?complete?'Section saved and selected. Listen below, then choose the next section or redo this one.':'Partial take saved. Record this section to its end before building the video.':'Video saved. Preview and download it below.'):'Take ready. Download now: persistent storage was unavailable.');
+   }else status('No media was captured. Try again.');
+  }catch(e){status('Saving failed: '+e.message)}state='idle';const wasAssembly=assembling;assembling=false;if(wasAssembly)position();controls();
+ };
+}
+async function start(withMic=false,silent=false){
+ if(state!=='idle')return;const token=++attempt;diagnostic=silent;assembling=false;
+ range=recordingRange(cues,section);if(silent)range={start:range.start,end:range.start+3};position();
+ if(!withMic&&!silent){clock.start(performance.now(),range.start);state='playing';status('Rehearsing — microphone is off. The section stops automatically.');controls();return}
+ state='countdown';controls();
+ try{
+  if(!window.MediaRecorder||!canvas.captureStream)throw new Error('Use desktop Chrome or Edge for recording.');
+  if(withMic){const granted=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});if(token!==attempt){granted.getTracks().forEach(t=>t.stop());return}mic=granted;audioContext=new AudioContext();await audioContext.resume();if(token!==attempt){cleanup();return}analyser=audioContext.createAnalyser();audioContext.createMediaStreamSource(mic).connect(analyser);}
+  const audioOnly=section!==null&&!silent;
+  output=audioOnly?new MediaStream(mic.getAudioTracks()):canvas.captureStream(30);
+  if(!audioOnly)for(const track of mic?.getAudioTracks()||[])output.addTrack(track);
+  createRecorder(audioOnly,{label:silent?'Silent diagnostic':audioOnly?`Section ${section+1}: ${titles[section]}`:'Full voice take',...(audioOnly?{section}:{})});
+  let n=3;function tick(){if(state!=='countdown')return;$('countdown').textContent=n>0?String(n):'';if(n--<=0){draw(range.start);recorder.start(1000);clock.start(performance.now(),range.start);state='playing';status(silent?'Silent diagnostic — no microphone.':'Recording. Read this cue; it will stop automatically.');controls();}else countTimer=setTimeout(tick,1000)}status('Get ready. Recording starts after the countdown.');tick();
+ }catch(e){if(token!==attempt)return;cleanup();recorder=null;state='idle';$('countdown').textContent='';status('Could not start: '+e.message);controls()}
+}
+async function assemble(){
+ if(state!=='idle')return;state='preparing';assembling=true;controls();status('Preparing your selected voice clips…');
+ try{
+  const plan=assemblyPlan(cues,selectedTakes);audioContext=new AudioContext();await audioContext.resume();
+  const decoded=await Promise.all(plan.map(async item=>({...item,buffer:await audioContext.decodeAudioData(await item.take.blob.arrayBuffer())})));
+  const dest=audioContext.createMediaStreamDestination();
+  output=canvas.captureStream(30);output.addTrack(dest.stream.getAudioTracks()[0]);
+  range=recordingRange(cues,null);createRecorder(false,{label:'Combined final video'});
+  const startAt=audioContext.currentTime;
+  for(const item of decoded){const source=audioContext.createBufferSource();source.buffer=item.buffer;source.connect(dest);source.start(startAt+item.offset,0,Math.min(item.duration,item.buffer.duration));sources.push(source);}
+  draw(0);recorder.start(1000);clock.start(performance.now());state='playing';status('Building your 1:50 video. No need to speak. Keep this tab visible; switching away pauses the export.');controls();
+ }catch(e){cleanup();recorder=null;state='idle';assembling=false;status('Could not build video: '+e.message+'. Your clips are still saved.');controls()}
+}
+$('section').onchange=()=>{section=$('section').value==='all'?null:Number($('section').value);position();status(section===null?'Ready for a continuous take.':`Section ${section+1} selected. Rehearse or record just this cue.`);controls()};
+$('assemble').onclick=assemble;$('rehearse').onclick=()=>start();$('record').onclick=()=>start(true);$('diagnostic').onclick=()=>start(false,true);$('pause').onclick=()=>state==='paused'?resume():pause();$('stop').onclick=finish;$('reset').onclick=()=>{position();status('Back to the start of your selected section.');controls()};
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='playing')pause();else if(state==='countdown')finish()}});
+ document.addEventListener('keydown',e=>{if(e.code==='Space'&&!['BUTTON','INPUT','TEXTAREA','VIDEO','AUDIO','SELECT'].includes(document.activeElement.tagName)&&['playing','paused'].includes(state)){e.preventDefault();state==='paused'?resume():pause()}if(e.code==='Escape'&&['playing','paused','countdown'].includes(state))finish()});
+ window.addEventListener('beforeunload',e=>{if(state!=='idle'){e.preventDefault();e.returnValue=''}});
+try{
+ [cues,evidence]=await Promise.all(['cues.json','evidence.json'].map(async p=>{const r=await fetch(p);if(!r.ok)throw new Error(p+' unavailable');return r.json()}));
+ if(!evidence.question||!evidence.revisedFeedback?.change)throw new Error('Expected preserved Defend It session');
+ try{const request=indexedDB.open('defend-it-guided-recorder',1);request.onupgradeneeded=()=>request.result.createObjectStore('takes',{keyPath:'id'});request.onsuccess=async()=>{db=request.result;try{
+  const takes=(await transaction('readonly',s=>s.getAll())).sort((a,b)=>a.date-b.date);
+  for(const t of takes){if(t.complete&&Number.isInteger(t.section)&&t.selected!==false)selectedTakes.set(t.section,t);addTake(t)}controls();
+ }catch{}};request.onerror=()=>status('Local storage unavailable. Download each take before leaving.');}catch{db=null}
+ position();status('Ready. Choose a section, rehearse, then record. Your microphone is off until you click Record.');controls();render();
+}catch(e){status('Could not load the studio: '+e.message);controls()}

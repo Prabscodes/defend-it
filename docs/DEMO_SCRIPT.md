@@ -16,6 +16,12 @@ The studio is an edited replay of a preserved AI session using a fictional Campu
 | 83–98s | patterns | I'm using three prompt techniques here. Persona sets the coach's role. Few-shot examples show what useful feedback looks like. Iterative refinement lets you try again and compare answers. |
 | 98–110s | close | Finally, I can download the questions, my answers, and the feedback. That gives me something to practise with before the actual presentation. |
 
+## Recording in sections
+
+The studio defaults to section 1. Choose a section, click **Record my voice for this section**, allow the microphone, and wait for the countdown. The demo starts at that section and the voice clip stops automatically at its end. Listen below; redo only that section if needed. The newest complete take is selected automatically, and **Use this take** can restore an earlier attempt. Stopping early saves a partial clip without replacing the selected complete take.
+
+After all nine sections are ready, click **Build final video**. This combines selected voice clips with the animated demo in real time (1:50), without using the microphone. Keep the tab visible; switching away pauses the build. Preview and download the combined WebM when it finishes. Clips and selected takes persist in this browser when storage is available. They do not sync between devices. Original continuous recordings remain available below, and the section dropdown still offers a whole-demo recording option.
+
 ## Live classroom demonstration
 
 Open the public site before presenting to handle a possible host cold start. Use the sample as input, generate claims and a question live, answer, discuss the actual response, and retry. Show actual prompt templates and explain why each pattern exists. Keep a labelled recording as a contingency, explicitly disclose if live inference is unavailable. End with limitations: generated advice can be mistaken, quote matching does not prove useful interpretation, and the model cannot verify research that was not provided.
