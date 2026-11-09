@@ -3,54 +3,54 @@
     "start": 0,
     "end": 12,
     "scene": "setup",
-    "text": "Your slides are finished. Then someone asks, what evidence supports that claim? Defend It helps you practise those questions before your presentation."
+    "text": "I built Defend It to help you practise answering questions about your presentation. Let me show you how it works with a sample project."
   },
   {
     "start": 12,
     "end": 22,
     "scene": "claim",
-    "text": "I load the Campus Cup sample, then select its boldest claim: an eighty percent reduction in campus cup waste. That's a prediction, not evidence."
+    "text": "This one's about reusable cups on campus. It predicts an eighty percent drop in waste. I'll pick that claim and see what gets asked."
   },
   {
     "start": 22,
     "end": 35,
     "scene": "question",
-    "text": "The coach asks how a short pilot, limited budget, and no wider behavior data support that prediction. The question connects directly to the presentation."
+    "text": "So, it's asking how we'd actually back up that number, given our budget and short pilot. That's a fair question to get during a presentation."
   },
   {
     "start": 35,
     "end": 44,
     "scene": "answer",
-    "text": "My first answer leans on eighteen interested classmates. It sounds confident, but interest alone doesn't show that people will return cups."
+    "text": "My first answer is pretty weak: eighteen classmates said they'd try it. But that doesn't mean they'll actually return their cups."
   },
   {
     "start": 44,
     "end": 57,
     "scene": "feedback",
-    "text": "The feedback recognizes the survey, then flags its narrow sample and missing validation. It suggests expanding the sample and looking for comparable programs."
+    "text": "Here's the feedback. It picks up on the survey, but points out that we only asked classmates. It suggests getting more evidence before making that claim."
   },
   {
     "start": 57,
     "end": 71,
     "scene": "revision",
-    "text": "I revise the same answer. Eighty percent becomes an untested goal. I acknowledge the limited sample, propose measuring actual returns, and include staff labor."
+    "text": "Let me try again. This time, I say eighty percent is a goal we haven't tested. I also explain how we'd track returns and account for staff time."
   },
   {
     "start": 71,
     "end": 83,
     "scene": "comparison",
-    "text": "The recorded comparison calls the reasoning stronger. But the follow-up asks for metrics I already named. That's a real limitation, retained here rather than hidden."
+    "text": "It says the answer is stronger now. But it also asks for measurements I've already mentioned. So you still need to check what it tells you."
   },
   {
     "start": 83,
     "end": 98,
     "scene": "patterns",
-    "text": "Three prompt patterns support the workflow: a rigorous, kind coaching persona; few-shot examples demonstrating grounded feedback; and iterative refinement comparing two attempts on the same question."
+    "text": "I'm using three prompt techniques here. Persona sets the coach's role. Few-shot examples show what useful feedback looks like. Iterative refinement lets you try again and compare answers."
   },
   {
     "start": 98,
     "end": 110,
     "scene": "close",
-    "text": "Download the prep sheet to revisit your question, answers, and feedback. The coach can still miss things, so check its advice, then rehearse aloud."
+    "text": "Finally, I can download the questions, my answers, and the feedback. That gives me something to practise with before the actual presentation."
   }
 ]

@@ -1,19 +1,20 @@
-# Defend It: 110-second narration and shot plan
+# Defend It: 110-second guided narration
 
-Draft aligned to approved workflow. Verify labels and actual behavior after browser QA before recording. Use the bundled fictional project; make no claims about real research participants. Record real interactions. If model waits are cut, show “AI wait shortened”; never substitute authored outputs as live inference.
+These are the spoken cues used by the public recording studio at https://defend-it.onrender.com/studio/. Read them as though you are showing a classmate the app. Pause at sentence breaks; there is no need to fill every second.
 
-| Time | Screen action | Narration |
+The studio is an edited replay of a preserved AI session using a fictional Campus Cup project, with that label visible throughout. It is not live inference. The narration describes the actual saved responses, including an imperfect follow-up. The classroom live demo is separate.
+
+| Time | Scene | Narration |
 |---|---|---|
-| 0–12s | Open website; show presentation input | “Your slides can look finished, and you can still be unprepared for the first question. Defend It helps students practise defending their project before presentation day.” |
-| 12–25s | Load fictional sample and optional rubric; start | “I add my presentation outline and, if I have one, the grading rubric. The coach identifies the claims first, so I can check that it understood my project.” |
-| 25–38s | Confirm claims; show actual question | “Then it asks a question based on those claims. Here, the project promises a benefit—but the presentation needs to explain what evidence supports it.” |
-| 38–51s | Type the prepared weak answer and submit | “I answer as I would in class. The point is to practise my explanation, not to have the app invent a convincing answer for me.” |
-| 51–66s | Show actual feedback and quoted answer | “The feedback points to my own words, explains what is missing, and suggests what to clarify. Missing evidence should stay missing until I actually have it.” |
-| 66–82s | Retry same question; show comparison | “I can retry that exact question and compare my attempts. This is iterative refinement: the coach evaluates my revision against the same question instead of simply praising a rewrite.” |
-| 82–99s | Open prompt explanation/templates | “Two other prompt techniques shape the experience. An examiner persona controls the questioning, and few-shot examples teach the coach to give specific feedback grounded in the answer.” |
-| 99–110s | Export preparation sheet and show URL | “I leave with questions and gaps to prepare. This is practice feedback, not an official grade. The website and source code are available for you to try.” |
-
-Read conversationally; pause at sentence boundaries. Record the narration only after the actual question/feedback are known. If the saved run differs from this generic wording, adjust the narration rather than editing evidence to match the script. Do not say the URL is available until it is verified.
+| 0–12s | setup | I built Defend It to help you practise answering questions about your presentation. Let me show you how it works with a sample project. |
+| 12–22s | claim | This one's about reusable cups on campus. It predicts an eighty percent drop in waste. I'll pick that claim and see what gets asked. |
+| 22–35s | question | So, it's asking how we'd actually back up that number, given our budget and short pilot. That's a fair question to get during a presentation. |
+| 35–44s | answer | My first answer is pretty weak: eighteen classmates said they'd try it. But that doesn't mean they'll actually return their cups. |
+| 44–57s | feedback | Here's the feedback. It picks up on the survey, but points out that we only asked classmates. It suggests getting more evidence before making that claim. |
+| 57–71s | revision | Let me try again. This time, I say eighty percent is a goal we haven't tested. I also explain how we'd track returns and account for staff time. |
+| 71–83s | comparison | It says the answer is stronger now. But it also asks for measurements I've already mentioned. So you still need to check what it tells you. |
+| 83–98s | patterns | I'm using three prompt techniques here. Persona sets the coach's role. Few-shot examples show what useful feedback looks like. Iterative refinement lets you try again and compare answers. |
+| 98–110s | close | Finally, I can download the questions, my answers, and the feedback. That gives me something to practise with before the actual presentation. |
 
 ## Live classroom demonstration
 
