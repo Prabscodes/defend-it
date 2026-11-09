@@ -6,6 +6,8 @@ This is a working course MVP, not an official grader or a factual verification s
 
 Website: https://defend-it.onrender.com — deployed; hosted AI configuration and verification are still pending. See the validation record before treating it as submission-ready.
 
+Demo video: https://defend-it.onrender.com/demo/ — presenter-narrated, 1:50 edited replay of preserved AI outputs. The recording is separate from the required live classroom demonstration.
+
 ## What you can do
 
 1. Paste presentation notes (or import plain `.txt`) and optionally a grading rubric.
